@@ -186,6 +186,39 @@ async def order_refresh(interaction: discord.Interaction):
     count = await import_thread(bot, interaction.channel, refresh=True)
     await interaction.followup.send(f"Refreshed {count} entries. Review any removed or changed items.", ephemeral=True)
 
+class TextImportModal(discord.ui.Modal, title="Import THC Order"):
+    order_text = discord.ui.TextInput(label="Paste customer order", style=discord.TextStyle.paragraph, required=True, max_length=4000)
+    async def on_submit(self, interaction: discord.Interaction):
+        names = parse_items(str(self.order_text))
+        if not names:
+            return await interaction.response.send_message("No catalog matches found. Check the names or update the catalog.", ephemeral=True)
+        # Preview first; no existing order data is overwritten.
+        preview = "\\n".join(f"• {name}" for name in names[:35])
+        if len(names) > 35:
+            preview += f"\\n...and {len(names)-35} more"
+        await interaction.response.send_message(
+            f"**Import preview — not saved**\\n{preview}\\n\\nThis parser does not yet interpret pairs, sex, or quantities. Review the original text before using this as an order.",
+            ephemeral=True
+        )
+
+@bot.tree.command(name="order_import", description="Paste an order and preview recognized dinosaurs")
+async def order_import(interaction: discord.Interaction):
+    if not is_order_thread(interaction.channel) or not staff_only(interaction):
+        return await interaction.response.send_message("Staff only, inside an approved order thread.", ephemeral=True)
+    await interaction.response.send_modal(TextImportModal())
+
+@bot.tree.command(name="order_import_image", description="Attach a screenshot for manual review (OCR not configured yet)")
+@app_commands.describe(image="Image containing the order")
+async def order_import_image(interaction: discord.Interaction, image: discord.Attachment):
+    if not is_order_thread(interaction.channel) or not staff_only(interaction):
+        return await interaction.response.send_message("Staff only, inside an approved order thread.", ephemeral=True)
+    if not image.content_type or not image.content_type.startswith("image/"):
+        return await interaction.response.send_message("Please attach an image.", ephemeral=True)
+    await interaction.response.send_message(
+        f"Screenshot received for review: {image.filename}. Automated image reading is not configured yet; no order was created or modified.",
+        ephemeral=True
+    )
+
 @bot.tree.command(name="order_status", description="Show the saved order checklist")
 async def order_status(interaction: discord.Interaction):
     if not is_order_thread(interaction.channel):
