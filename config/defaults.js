@@ -5,7 +5,9 @@ const DEFAULTS = {
   "map": "assets/defaults/map.png",
   "yellow": "assets/defaults/yellow.png",
   "red": "assets/defaults/red.png",
-  "green": "assets/defaults/green.png"
+  "green": "assets/defaults/green.png",
+  "fridgeDedi": "Images/Dedidicated Storage Beneath Refrigerator.png",
+  "cryoDedi": "Images/Dedidicated Storage Beneath Cryo Refrigerator.png"
 };
 const ASTREOS_ASSETS = {
   logo: 'images/ARK_ Survival Ascended-2026_11_13-20-48-45.png',
