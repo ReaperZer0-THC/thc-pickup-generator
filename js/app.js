@@ -74,7 +74,7 @@ async function seedCenter(){
     (p.values?.mapName==='The Center' && String(p.values?.server)==='5592')))return;
   const values={
     profileName:'The Center / 5592 / THC Dispensary',server:'5592',mapName:'The Center',
-    spawn:'Snow North',coords:'19.7, 36.6',pin:'',
+    spawn:'Snow North',coords:'16.5, 38.1',pin:'',
     resourceColor:'yellow',clusterType:'standard',pickupType:'standard',
     bgX:'50',bgY:'50',showWarden:true,showMap:true,astreosPhoto:'logo'
   };
@@ -181,6 +181,11 @@ async function loadProfile(id){
   THCLog.add('info','Profile','Loading '+p.name);
   state.profileId=p.id;
   applyValues(p.values);
+  // Migrate only the obsolete default coordinates; preserve user-customized locations.
+  if(getVal('mapName')==='The Center' && String(getVal('server'))==='5592' && /^19\.7\s*,\s*36\.6$/.test(String(getVal('coords')).trim())){
+    setVal('coords','16.5, 38.1');
+    THCLog.add('info','Profile','Updated The Center pickup coordinates to 16.5, 38.1 (unsaved until profile save)');
+  }
   if(getVal('mapName')==='The Center' && getVal('server')==='5592')setVal('profileName','The Center / 5592 / THC Dispensary');
   if(getVal('mapName')==='Astreos' && getVal('server')==='5992')setVal('profileName','Astreos / 5992 / THC Dispensary');
   if(!p.values?.pickupType)setVal('pickupType','standard');
@@ -213,7 +218,7 @@ function resetFields(){
   state.images={bg:null,map:null,yellow:null,red:null,green:null,fridgeDedi:null,cryoDedi:null,warden:null};
   clearImageInputs();
   setVal('profileName','');setVal('server','5592');setVal('mapName','The Center');setVal('spawn','Snow North');
-  setVal('coords','19.7, 36.6');setVal('pin','');
+  setVal('coords','16.5, 38.1');setVal('pin','');
   setVal('resourceColor','yellow');setVal('clusterType','standard');setVal('pickupType','standard');setVal('astreosPhoto','logo');
   setVal('bgX',50);setVal('bgY',50);setVal('showWarden',true);setVal('showMap',true);
   loadImage(DEFAULTS.bg,'bg');loadImage(DEFAULTS.map,'map');loadImage(DEFAULTS.yellow,'yellow');
