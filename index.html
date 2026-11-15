@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>THC — Dino Pickup Poster Builder</title>
+<title>THC — Pickup Generator V4</title>
 <link rel="stylesheet" href="css/style.css?v=20261114-diag1">
 </head>
 <body>
@@ -39,7 +39,7 @@
 <section>
   <h2>Location</h2>
   <label>Server</label><input id="server" value="5592">
-  <label>Map</label><input id="mapName" value="The Center">
+  <label>ASA Map Library</label><select id="mapLibrary"><option value="">Choose an ASA map…</option></select><label>Map name (editable for custom maps)</label><input id="mapName" value="The Center"><p class="hint">Built-in map names are available now. Verified reusable map artwork and calibrated marker placement will be added per map. Existing saved map images continue to work.</p>
   <label>Spawn</label><input id="spawn" value="Snow North">
   <label>Coordinates</label><input id="coords" value="19.7, 36.6">
   <label>PIN</label>
@@ -52,7 +52,7 @@
   </select>
   <p class="hint">For the Astreos preset, choose either image. Uploading your own location screenshot still works.</p>
   <label>Location screenshot</label><input type="file" id="bgFile" accept="image/*">
-  <label>Map screenshot</label><input type="file" id="mapFile" accept="image/*">
+  <label>Map image (saved profile override)</label><input type="file" id="mapFile" accept="image/*">
   <label>Background focal point — horizontal</label>
   <div class="range-row"><input id="bgX" type="range" min="0" max="100" value="50"><output id="bgXOut">50%</output></div>
   <label>Background focal point — vertical</label>
@@ -112,13 +112,14 @@
 </aside>
 
 <main>
-  <div id="posterWrap"><canvas id="canvas" width="1600" height="1000"></canvas></div>
+  <div id="posterWrap"><canvas id="canvas" width="1200" height="1900"></canvas></div>
 </main>
 </div>
 
 <script src="config/defaults.js?v=20261114-diag1"></script>
+<script src="js/maps.js?v=20261114-v4a"></script>
 <script src="js/diagnostics.js?v=20261114-diag1"></script>
-<script src="js/app.js?v=20261114-diag1"></script>
-<script src="js/renderer.js?v=20261114-clusterfit1"></script>
+<script src="js/app.js?v=20261114-v4a"></script>
+<script src="js/renderer.js?v=20261114-v4a"></script>
 </body>
 </html>
