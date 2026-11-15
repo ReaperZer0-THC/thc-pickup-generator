@@ -124,8 +124,8 @@ function draw(){
     if(res) fitContain(res,1250,745,295,185,3);
   }else{
     const res=state.images[cluster];
-    if(res) fitContain(res,1250,745,295,185,3);
-    else drawClusterPlaceholder(cluster);
+    if(res){fitContain(res,1250,745,295,185,3);THCLog.render(cluster,'photo loaded');}
+    else {drawClusterPlaceholder(cluster);THCLog.render(cluster,'placeholder');}
   }
 
   // THC footer
