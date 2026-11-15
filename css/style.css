@@ -1,0 +1,36 @@
+
+:root{
+  --bg:#091009;--panel:#111a12;--panel2:#162117;--line:#6d5a25;
+  --gold:#e3c76b;--green:#9bd45f;--text:#eef2e8;--muted:#aab6a5;
+}
+*{box-sizing:border-box}
+body{margin:0;background:radial-gradient(circle at 50% 0,#263827 0,#0b110b 58%,#050805 100%);
+color:var(--text);font-family:Inter,Segoe UI,Arial,sans-serif}
+header{position:sticky;top:0;z-index:20;display:flex;align-items:center;gap:14px;
+padding:14px 20px;background:#080d09ee;border-bottom:1px solid #354433;backdrop-filter:blur(8px)}
+header h1{font-size:18px;margin:0}.badge{background:linear-gradient(135deg,#e8ce73,#82631d);
+color:#111;padding:5px 9px;border-radius:999px;font-weight:900;font-size:12px}
+.app{display:grid;grid-template-columns:390px minmax(650px,1fr);min-height:calc(100vh - 62px)}
+aside{padding:16px;background:#0c120d;border-right:1px solid #2e3b2e;overflow:auto}
+main{padding:18px;display:flex;justify-content:center;align-items:flex-start}
+section{background:#101810;border:1px solid #354534;border-radius:12px;margin-bottom:12px;padding:13px}
+section h2{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:#d9c27a;margin:0 0 10px}
+label{display:block;font-size:11px;color:var(--muted);margin:9px 0 4px}
+input,textarea,select{width:100%;border:1px solid #465545;background:#0b110c;color:var(--text);
+border-radius:7px;padding:8px;font:inherit}
+textarea{min-height:74px;resize:vertical}
+input[type=file]{padding:6px}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+button{border:0;border-radius:7px;padding:9px 10px;background:#30472e;color:white;font-weight:750;cursor:pointer;margin-top:7px}
+button.primary{background:linear-gradient(135deg,#b99538,#6f551d)}
+button.danger{background:#5a2929}
+button:hover{filter:brightness(1.12)}
+.buttons{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.hint{font-size:10px;color:#899587;line-height:1.45}
+.check{display:flex;gap:8px;align-items:center;margin:7px 0;color:#d9dfd5;font-size:11px}.check input{width:auto}
+.range-row{display:grid;grid-template-columns:1fr 50px;gap:8px;align-items:center}
+.range-row output{font-size:11px;color:#d8c271;text-align:right}
+#posterWrap{width:min(100%,1200px);box-shadow:0 20px 70px #000;background:#000}
+canvas{width:100%;height:auto;display:block}
+.status{font-size:10px;color:#8fa18b;margin-top:7px;min-height:14px}
+@media(max-width:1000px){.app{grid-template-columns:1fr}aside{border-right:0;border-bottom:1px solid #2e3b2e}main{padding:8px}}
