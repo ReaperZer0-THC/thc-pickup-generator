@@ -11,6 +11,23 @@ function fitContain(im,x,y,w,h,pad=0){
   const dw=im.width*s,dh=im.height*s;
   ctx.drawImage(im,x+(w-dw)/2,y+(h-dh)/2,dw,dh);
 }
+function fitClusterPhoto(im,x,y,w,h){
+  if(!im)return;
+  ctx.save();
+  ctx.beginPath();ctx.rect(x,y,w,h);ctx.clip();
+  // Fill the wide panel with a subdued, blurred copy; preserve the entire portrait image above it.
+  ctx.save();ctx.filter='blur(18px) brightness(0.38)';
+  fitCover(im,x-24,y-24,w+48,h+48);
+  ctx.restore();
+  const inset=5;
+  const scale=Math.min((w-2*inset)/im.width,(h-2*inset)/im.height);
+  const dw=im.width*scale,dh=im.height*scale;
+  const dx=x+(w-dw)/2,dy=y+(h-dh)/2;
+  ctx.fillStyle='rgba(6,13,8,.75)';ctx.fillRect(dx-3,dy-3,dw+6,dh+6);
+  ctx.drawImage(im,dx,dy,dw,dh);
+  ctx.restore();
+  return {drawWidth:Math.round(dw),drawHeight:Math.round(dh)};
+}
 function rr(x,y,w,h,r,fill,stroke,line=2){
   ctx.beginPath();ctx.roundRect(x,y,w,h,r);
   if(fill){ctx.fillStyle=fill;ctx.fill();}
@@ -124,7 +141,7 @@ function draw(){
     if(res) fitContain(res,1250,745,295,185,3);
   }else{
     const res=state.images[cluster];
-    if(res){fitContain(res,1250,745,295,185,3);THCLog.render(cluster,'photo loaded');}
+    if(res){const size=fitClusterPhoto(res,1250,745,295,185);THCLog.render(cluster,'photo fitted '+size.drawWidth+'x'+size.drawHeight+' in 295x185 panel');}
     else {drawClusterPlaceholder(cluster);THCLog.render(cluster,'placeholder');}
   }
 
