@@ -96,10 +96,11 @@ async function seedAstreos(){
   });
 }
 function loadImage(src,key){
-  if(!src)return;
+  if(!src){THCLog.add('warn','Image '+key,'No source configured');return;}
+  THCLog.add('info','Image '+key,'Loading '+src);
   const im=new Image();
-  im.onload=()=>{state.images[key]=im;state.imageData[key]=src;draw();};
-  im.onerror=()=>console.warn('THC image could not load:',key,src);
+  im.onload=()=>{state.images[key]=im;state.imageData[key]=src;THCLog.add('info','Image '+key,'Loaded '+im.naturalWidth+'x'+im.naturalHeight+' — '+src);draw();};
+  im.onerror=()=>{THCLog.add('error','Image '+key,'Failed to load '+src);console.warn('THC image could not load:',key,src);};
   im.src=src;
 }
 function fileToData(file,key){
@@ -113,12 +114,14 @@ function fileToData(file,key){
 
 let standardPickupSnapshot=null;
 $('clusterType').addEventListener('change',()=>{
+  THCLog.add('info','Cluster selection',getVal('clusterType'));
   if(getVal('pickupType')==='drakeling' && getVal('clusterType')!=='cryoDedi'){
     setVal('clusterType','cryoDedi');
   }
   draw();
 });
 $('pickupType').addEventListener('change',()=>{
+  THCLog.add('info','Pickup type',getVal('pickupType'));
   if(getVal('pickupType')==='drakeling'){
     standardPickupSnapshot={server:getVal('server'),mapName:getVal('mapName'),spawn:getVal('spawn'),coords:getVal('coords'),clusterType:getVal('clusterType')};
     setVal('server','5992');setVal('mapName','Astreos');
@@ -174,7 +177,8 @@ async function refreshProfiles(selected){
 }
 async function loadProfile(id){
   if(!id)return;
-  const p=await dbGet(id); if(!p)return;
+  const p=await dbGet(id); if(!p){THCLog.add('error','Profile','Not found: '+id);return;}
+  THCLog.add('info','Profile','Loading '+p.name);
   state.profileId=p.id;
   applyValues(p.values);
   if(getVal('mapName')==='The Center' && getVal('server')==='5592')setVal('profileName','The Center / 5592 / THC Dispensary');
