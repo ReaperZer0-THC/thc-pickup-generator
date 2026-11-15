@@ -233,3 +233,21 @@ function updateOutputs(){
   $('bgYOut').textContent=$('bgY').value+'%';
 }
 
+
+\n// V4 map picker: map name remains the persisted source of truth for legacy profiles.
+const mapPicker=$('mapLibrary');
+for(const m of ASA_MAPS){const o=document.createElement('option');o.value=m.name;o.textContent=m.name;mapPicker.appendChild(o);}
+function syncMapPicker(){const m=normalizeMapName(getVal('mapName'));mapPicker.value=m?m.name:'';}
+mapPicker.addEventListener('change',()=>{
+ if(!mapPicker.value)return;
+ setVal('mapName',mapPicker.value);
+ // Never display a previous map's terrain as if it were the newly selected map.
+ state.images.map=null;state.imageData.map=null;
+ THCLog.add('info','ASA map','Selected '+mapPicker.value+'; upload a matching map image if needed');
+ draw();
+});
+$('mapName').addEventListener('input',syncMapPicker);
+$('profileSelect').addEventListener('change',()=>setTimeout(syncMapPicker,0));
+$('newProfile').addEventListener('click',()=>setTimeout(syncMapPicker,0));
+$('reset').addEventListener('click',()=>setTimeout(syncMapPicker,0));
+syncMapPicker();
