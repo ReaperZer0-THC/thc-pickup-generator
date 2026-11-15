@@ -234,7 +234,7 @@ function updateOutputs(){
 }
 
 
-\n// V4 map picker: map name remains the persisted source of truth for legacy profiles.
+// V4 map picker: map name remains the persisted source of truth for legacy profiles.
 const mapPicker=$('mapLibrary');
 for(const m of ASA_MAPS){const o=document.createElement('option');o.value=m.name;o.textContent=m.name;mapPicker.appendChild(o);}
 function syncMapPicker(){const m=normalizeMapName(getVal('mapName'));mapPicker.value=m?m.name:'';}
