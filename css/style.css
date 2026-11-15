@@ -36,3 +36,14 @@ canvas{width:100%;height:auto;display:block}
 @media(max-width:1000px){.app{grid-template-columns:1fr}aside{border-right:0;border-bottom:1px solid #2e3b2e}main{padding:8px}}
 
 #diagnostics summary{cursor:pointer;font-size:12px;font-weight:800;color:var(--gold)}#diagnosticLog{margin-top:9px;background:#050b06;border:1px solid #40503b;border-radius:7px;padding:8px;max-height:240px;overflow:auto;font:11px/1.5 Consolas,monospace;overflow-wrap:anywhere}.diag-error{color:#ff9292}.diag-warn{color:#ffda84}.diag-info{color:#a7d7ad}#diagnosticStatus{color:#9bd45f}
+
+/* Preview-only scaling: the canvas bitmap stays at its original 1200x1710 resolution. */
+main{min-width:0;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:10px}
+.previewToolbar{width:100%;max-width:1200px;display:flex;align-items:center;justify-content:space-between;gap:12px;color:var(--muted);font-size:12px}
+.previewActions{display:flex;gap:6px}
+.previewActions button{margin:0;padding:7px 12px;background:#263C45;border:1px solid #496778}
+.previewActions button[aria-pressed="true"]{background:#EAC568;color:#17221D;border-color:#EAC568}
+body.preview-fit #posterWrap{width:min(100%, calc((100dvh - 145px) * 1200 / 1710));max-width:1200px}
+body:not(.preview-fit) #posterWrap{width:min(100%,1200px)}
+@media(max-width:1000px){body.preview-fit #posterWrap{width:min(100%, calc((100dvh - 175px) * 1200 / 1710))}}
+@media(max-height:550px){body.preview-fit #posterWrap{width:min(100%, calc((100dvh - 110px) * 1200 / 1710))}}
