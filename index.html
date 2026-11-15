@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>THC — Dino Pickup Poster Builder</title>
-<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/style.css?v=20261114-diag1">
 </head>
 <body>
 <header>
@@ -98,6 +98,7 @@
   <label class="check"><input id="showMap" type="checkbox" checked> Show map inset</label>
 </section>
 
+<section id="diagnostics"><details open><summary>THC System Diagnostics — <span id="diagnosticStatus">Monitoring</span></summary><p class="hint">Live diagnostics stay in your browser.</p><div id="diagnosticLog" role="log" aria-live="polite"></div><div class="buttons"><button id="diagCheck" type="button">Check Images</button><button id="diagCopy" type="button">Copy Logs</button><button id="diagClear" type="button">Clear Logs</button></div></details></section>
 <section>
   <h2>Actions</h2>
   <div class="buttons">
@@ -115,8 +116,9 @@
 </main>
 </div>
 
-<script src="config/defaults.js?v=20261114-clusterfix2"></script>
-<script src="js/app.js?v=20261114-clusterfix2"></script>
-<script src="js/renderer.js?v=20261114-clusterfix2"></script>
+<script src="config/defaults.js?v=20261114-diag1"></script>
+<script src="js/diagnostics.js?v=20261114-diag1"></script>
+<script src="js/app.js?v=20261114-diag1"></script>
+<script src="js/renderer.js?v=20261114-diag1"></script>
 </body>
 </html>
