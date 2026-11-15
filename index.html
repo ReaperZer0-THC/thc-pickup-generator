@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>THC — Pickup Generator V4</title>
-<link rel="stylesheet" href="css/style.css?v=20261114-spectrum1?v=20261114-diag1">
+<link rel="stylesheet" href="css/style.css?v=20261115-fit1">
 </head>
 <body>
 <header>
@@ -112,9 +112,17 @@
 </aside>
 
 <main>
+  <div class="previewToolbar"><strong>Poster preview</strong><div class="previewActions"><button id="fitPreview" type="button" aria-pressed="true">Fit to Screen</button><button id="fullPreview" type="button" aria-pressed="false">Full Size</button></div></div>
   <div id="posterWrap"><canvas id="canvas" width="1200" height="1710"></canvas></div>
 </main>
 </div>
+<script>
+(function(){
+ const fit=document.getElementById("fitPreview"),full=document.getElementById("fullPreview"),wrap=document.getElementById("posterWrap");
+ function setMode(mode){const isFit=mode==="fit";document.body.classList.toggle("preview-fit",isFit);fit.setAttribute("aria-pressed",String(isFit));full.setAttribute("aria-pressed",String(!isFit));}
+ fit.addEventListener("click",()=>setMode("fit"));full.addEventListener("click",()=>setMode("full"));setMode("fit");
+})();
+</script>
 
 <script src="config/defaults.js?v=20261114-diag1"></script>
 <script src="js/maps.js?v=20261114-v4a"></script>
