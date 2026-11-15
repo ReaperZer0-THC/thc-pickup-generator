@@ -36,11 +36,13 @@ function photoCover(im,x,y,w,h,fx=50,fy=50){
  ctx.drawImage(im,sx,sy,sw,sh,x,y,w,h);ctx.restore();
 }
 function section(n,title,subtitle,y){
- rounded(32,y,1136,43,10,'#19432b');
- rounded(38,y+2,44,38,9,'#baff38');
- write(n,60,y+30,25,'#12301c',900,'center');
- write(title,96,y+30,26,'#ffe079',900);
- write(subtitle,1155,y+28,16,'#a7ef9d',700,'right');
+ const accents=['#EAC568','#20C88A','#47B5E8','#A678DC'];const accent=accents[Math.max(0,Math.min(3,Number(n)-1))];
+ rounded(32,y,1136,43,10,'#172d30');
+ ctx.fillStyle=accent;ctx.fillRect(32,y+4,6,35);
+ rounded(43,y+2,44,38,9,accent);
+ write(n,65,y+30,25,'#0D1720',900,'center');
+ write(title,101,y+30,26,accent,900);
+ write(subtitle,1155,y+28,16,'#B9CED2',700,'right');
 }
 function mapFrame(x,y,w,h){
  rounded(x,y,w,h,14,'#142219','#64794d');
@@ -59,30 +61,30 @@ function mapFrame(x,y,w,h){
 }
 function draw(){
  const W=c.width,H=c.height, drake=getVal('pickupType')==='drakeling';
- const lime='#baff38', emerald='#13df79', gold='#ffe079', white='#f4fbea', muted='#bdd5b9';
- const grad=ctx.createLinearGradient(0,0,W,H);grad.addColorStop(0,'#061b10');grad.addColorStop(.55,'#0a2617');grad.addColorStop(1,'#09130e');
+ const lime='#20C88A', emerald='#20C88A', gold='#EAC568', white='#F4F7F8', muted='#B9CED2', blue='#47B5E8', violet='#A678DC';
+ const grad=ctx.createLinearGradient(0,0,W,H);grad.addColorStop(0,'#0D1720');grad.addColorStop(.55,'#122B2A');grad.addColorStop(1,'#101723');
  ctx.fillStyle=grad;ctx.fillRect(0,0,W,H);
- ctx.fillStyle='#103c26';ctx.fillRect(0,0,W,108);
- ctx.fillStyle=lime;ctx.fillRect(0,104,W,5);
+ ctx.fillStyle='#193D35';ctx.fillRect(0,0,W,108);
+ ctx.fillStyle=gold;ctx.fillRect(0,104,W,5);
  write('THE HIGH COUNCIL',36,57,41,gold,900);
  write('PICKUP GUIDE  •  FOUR STEPS',40,89,19,emerald,800);
- rounded(920,23,242,64,12,'#193c27','#50c55b');
+ rounded(920,23,242,64,12,'#173C36',emerald);
  write('READY FOR PICKUP',1041,62,20,lime,900,'center');
  // Step 1: condensed high-contrast information strip.
  section('1','PICKUP DETAILS','TRANSFER & ACCESS',123);
- rounded(32,175,1136,157,13,'#123422','#377d48');
+ rounded(32,175,1136,157,13,'#25352D','#537767');
  write('MAP',52,205,15,muted,800);write(getVal('mapName')||'—',52,244,31,white,900);
  write('SERVER',422,205,15,muted,800);write(getVal('server')||'—',422,244,31,white,900);
  write('PICKUP TYPE',645,205,15,muted,800);
  wrapLines(drake?'Drakeling Key Pickup':'Standard Pickup',645,242,280,23,26,gold,2);
- rounded(975,185,170,115,12,'#25482b','#9fe944');
+ rounded(975,185,170,115,12,'#303044',gold);
  write('PIN',1060,211,15,muted,900,'center');
  write(getVal('pin')||'----',1060,268,42,lime,900,'center');
  const instructions=drake?'Collect XP-loaded Drakelings, transfer XP, then notify your trader for return pickup.':'Collect from the marked storage cluster. Contact your trader if assistance is needed.';
  wrapLines(instructions,52,300,870,17,22,muted,2);
  // Step 2: map screenshot fills the panel; no tiny centered thumbnail.
  section('2','COORDINATES & MAP','FIND YOUR WAY',350);
- rounded(32,403,1136,355,13,'#112d1e','#377d48');
+ rounded(32,403,1136,355,13,'#163D37',emerald);
  const coords=parseArkCoords(getVal('coords'));
  write('LAT / LON',52,437,15,muted,800);
  write(coords?coords.lat.toFixed(1)+'  /  '+coords.lon.toFixed(1):getVal('coords')||'—',52,481,38,lime,900);
@@ -90,10 +92,10 @@ function draw(){
  wrapLines(getVal('spawn')||'—',560,474,580,24,27,white,2);
  if(getVal('showMap')){
   const im=state.images.map;
-  rounded(48,506,1104,234,10,'#07170f','#448a46');
+  rounded(48,506,1104,234,10,'#0D1720',emerald);
   if(im){
    photoCover(im,51,509,1098,228,50,50);
-   rounded(58,516,165,29,7,'#071b10');
+   rounded(58,516,165,29,7,'#0D1720');
    write('MAP REFERENCE',69,537,16,lime,900);
    THCLog.render('map','reference image; marker withheld pending calibration');
   }else{
@@ -102,22 +104,22 @@ function draw(){
  }else write('Map hidden in display settings',600,633,21,muted,700,'center');
  // Step 3: photo is largest element on card.
  section('3','FIND THE LOCATION','MATCH THE LANDMARK',776);
- rounded(32,829,1136,390,13,'#112d1e','#377d48');
+ rounded(32,829,1136,390,13,'#1B354A',blue);
  if(state.images.bg)photoCover(state.images.bg,39,836,1122,376,Number(getVal('bgX')),Number(getVal('bgY')));
  else write('UPLOAD LOCATION PHOTO',600,1028,27,gold,800,'center');
  // Step 4: horizontal cluster panel with image on left.
  section('4','IDENTIFY THE PICKUP CLUSTER','MATCH THE CONTAINER',1237);
- rounded(32,1290,1136,276,13,'#112d1e','#377d48');
+ rounded(32,1290,1136,276,13,'#30263D',violet);
  const cluster=drake?'cryoDedi':getVal('clusterType');
  const im=state.images[cluster==='standard'?getVal('resourceColor'):cluster];
  const label=cluster==='cryoDedi'?'CRYOFRIDGE + DEDICATED STORAGE':cluster==='fridgeDedi'?'REFRIGERATOR + DEDICATED STORAGE':'STANDARD PICKUP CLUSTER';
- rounded(47,1302,470,250,10,'#0b2116','#327346');
+ rounded(47,1302,470,250,10,'#181C2C',violet);
  if(im){photoContain(im,56,1308,452,238);THCLog.render(cluster,'photo fitted without cropping');}
  else{write('CLUSTER PHOTO',282,1433,23,gold,800,'center');THCLog.render(cluster,'missing photo');}
- write('LOOK FOR',549,1352,18,emerald,900);
- wrapLines(label,549,1400,578,30,39,gold,3);
+ write('LOOK FOR',549,1352,18,violet,900);
+ wrapLines(label,549,1400,578,30,39,'#E5C8FF',3);
  wrapLines('Match this image before collecting your order.',549,1512,565,18,24,muted,2);
- rounded(32,1584,1136,61,12,'#22542f','#66bd47');
+ rounded(32,1584,1136,61,12,'#514025',gold);
  write('72-HOUR PICKUP WINDOW  •  CONTACT YOUR TRADER FOR AN EXTENSION',600,1623,20,white,900,'center');
  write('THE WARDEN  •  THE HIGH COUNCIL',600,1686,17,emerald,800,'center');
 }
