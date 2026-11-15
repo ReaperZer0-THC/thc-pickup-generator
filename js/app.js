@@ -99,6 +99,7 @@ function loadImage(src,key){
   if(!src)return;
   const im=new Image();
   im.onload=()=>{state.images[key]=im;state.imageData[key]=src;draw();};
+  im.onerror=()=>console.warn('THC image could not load:',key,src);
   im.src=src;
 }
 function fileToData(file,key){
@@ -185,7 +186,10 @@ async function loadProfile(id){
   state.imageData={};
   state.images={bg:null,map:null,yellow:null,red:null,green:null,fridgeDedi:null,cryoDedi:null,warden:null};
   for(const key of Object.keys(state.images)) {
-    const source = p.images?.[key] || DEFAULTS[key];
+    const saved = p.images?.[key];
+    const source = (key === 'fridgeDedi' || key === 'cryoDedi')
+      ? (saved?.startsWith('data:image/') ? saved : DEFAULTS[key])
+      : (saved || DEFAULTS[key]);
     if(source) loadImage(source,key);
   }
   if(id===ASTREOS_ID){
