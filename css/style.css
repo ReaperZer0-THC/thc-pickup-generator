@@ -34,3 +34,5 @@ button:hover{filter:brightness(1.12)}
 canvas{width:100%;height:auto;display:block}
 .status{font-size:10px;color:#8fa18b;margin-top:7px;min-height:14px}
 @media(max-width:1000px){.app{grid-template-columns:1fr}aside{border-right:0;border-bottom:1px solid #2e3b2e}main{padding:8px}}
+
+#diagnostics summary{cursor:pointer;font-size:12px;font-weight:800;color:var(--gold)}#diagnosticLog{margin-top:9px;background:#050b06;border:1px solid #40503b;border-radius:7px;padding:8px;max-height:240px;overflow:auto;font:11px/1.5 Consolas,monospace;overflow-wrap:anywhere}.diag-error{color:#ff9292}.diag-warn{color:#ffda84}.diag-info{color:#a7d7ad}#diagnosticStatus{color:#9bd45f}
