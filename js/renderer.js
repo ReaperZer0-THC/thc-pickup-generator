@@ -110,7 +110,7 @@ function draw(){
 function makeNewPin(){setVal('pin',randomPin());draw();}
 $('newPin').onclick=makeNewPin;$('newPin2').onclick=makeNewPin;
 fields.forEach(id=>$(id).addEventListener('input',()=>{updateOutputs();draw();}));
-$('profileSelect').addEventListener('change',e=>loadProfile(e.target.value));
+$('profileSelect').addEventListener('change',async e=>{await loadProfile(e.target.value);if(typeof syncMapPicker==='function')syncMapPicker();});
 $('newProfile').onclick=()=>{resetFields();$('profileSelect').value='';$('profileName').focus();};
 $('saveProfile').onclick=saveProfile;$('saveCurrent').onclick=saveProfile;
 $('deleteProfile').onclick=async()=>{
