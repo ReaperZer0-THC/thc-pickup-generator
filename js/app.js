@@ -184,7 +184,10 @@ async function loadProfile(id){
   if(getVal('pickupType')==='drakeling')setVal('clusterType','cryoDedi');
   state.imageData={};
   state.images={bg:null,map:null,yellow:null,red:null,green:null,fridgeDedi:null,cryoDedi:null,warden:null};
-  for(const key of Object.keys(state.images)) if(p.images && p.images[key]) loadImage(p.images[key],key);
+  for(const key of Object.keys(state.images)) {
+    const source = p.images?.[key] || DEFAULTS[key];
+    if(source) loadImage(source,key);
+  }
   if(id===ASTREOS_ID){
     // Match the saved choice while retaining any custom uploaded photo.
     const choice=(p.values && p.values.astreosPhoto)==='storefront'?'storefront':'logo';
