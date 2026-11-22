@@ -115,6 +115,12 @@ function fileToData(file,key){
 .forEach(([input,key])=>$(input).addEventListener('change',e=>fileToData(e.target.files[0],key)));
 
 let standardPickupSnapshot=null;
+function applyDrakelingPreset(){
+ setVal('server','5992');setVal('mapName','Astreos');setVal('spawn','THC Dispensary — Pyranthos');setVal('coords','90.3, 56.8');setVal('clusterType','cryoDedi');
+ const photo=getVal('astreosPhoto')==='storefront'?'storefront':'logo';
+ loadImage(ASTREOS_ASSETS[photo],'bg');loadImage(ASTREOS_ASSETS.map,'map');
+ if(typeof syncMapPicker==='function')syncMapPicker();
+}
 $('clusterType').addEventListener('change',()=>{
   THCLog.add('info','Cluster selection',getVal('clusterType'));
   if(getVal('pickupType')==='drakeling' && getVal('clusterType')!=='cryoDedi'){
@@ -125,14 +131,17 @@ $('clusterType').addEventListener('change',()=>{
 $('pickupType').addEventListener('change',()=>{
   THCLog.add('info','Pickup type',getVal('pickupType'));
   if(getVal('pickupType')==='drakeling'){
-    standardPickupSnapshot={server:getVal('server'),mapName:getVal('mapName'),spawn:getVal('spawn'),coords:getVal('coords'),clusterType:getVal('clusterType')};
-    setVal('server','5992');setVal('mapName','Astreos');
-    setVal('spawn','THC Dispensary — Pyranthos');setVal('coords','90.3, 56.8');
-    setVal('clusterType','cryoDedi');
-    loadImage(ASTREOS_ASSETS.logo,'bg');loadImage(ASTREOS_ASSETS.map,'map');
+    standardPickupSnapshot={values:{server:getVal('server'),mapName:getVal('mapName'),spawn:getVal('spawn'),coords:getVal('coords'),clusterType:getVal('clusterType')},images:{bg:state.imageData.bg,map:state.imageData.map}};
+    applyDrakelingPreset();
   }else if(standardPickupSnapshot){
-    for(const [key,value] of Object.entries(standardPickupSnapshot))setVal(key,value);
+    for(const [key,value] of Object.entries(standardPickupSnapshot.values))setVal(key,value);
+    for(const key of ['bg','map']){
+      const source=standardPickupSnapshot.images[key];
+      if(source)loadImage(source,key);
+      else{imageRequests[key]=(imageRequests[key]||0)+1;state.images[key]=null;state.imageData[key]=null;}
+    }
     standardPickupSnapshot=null;
+    if(typeof syncMapPicker==='function')syncMapPicker();
   }
   draw();
 });
@@ -194,7 +203,9 @@ async function loadProfile(id){
   if(!p.values?.pickupType)setVal('pickupType','standard');
   if(!p.values?.clusterType)setVal('clusterType','standard');
   standardPickupSnapshot=null;
-  if(getVal('pickupType')==='drakeling')setVal('clusterType','cryoDedi');
+  if(getVal('pickupType')==='drakeling'){
+    setVal('server','5992');setVal('mapName','Astreos');setVal('spawn','THC Dispensary — Pyranthos');setVal('coords','90.3, 56.8');setVal('clusterType','cryoDedi');
+  }
   state.imageData={};
   state.images={bg:null,map:null,yellow:null,red:null,green:null,fridgeDedi:null,cryoDedi:null,warden:null};
   for(const key of Object.keys(state.images)) {
@@ -206,6 +217,7 @@ async function loadProfile(id){
       : (preferred || DEFAULTS[key]);
     if(source) loadImage(source,key);
   }
+  if(getVal('pickupType')==='drakeling')applyDrakelingPreset();
   if(id===ASTREOS_ID){
     // Match the saved choice while retaining any custom uploaded photo.
     const choice=(p.values && p.values.astreosPhoto)==='storefront'?'storefront':'logo';
