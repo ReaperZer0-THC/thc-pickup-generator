@@ -95,12 +95,14 @@ async function seedAstreos(){
     updated:new Date().toISOString()
   });
 }
+const imageRequests={};
 function loadImage(src,key){
   if(!src){THCLog.add('warn','Image '+key,'No source configured');return;}
+  const request=(imageRequests[key]||0)+1;imageRequests[key]=request;
   THCLog.add('info','Image '+key,'Loading '+src);
   const im=new Image();
-  im.onload=()=>{state.images[key]=im;state.imageData[key]=src;THCLog.add('info','Image '+key,'Loaded '+im.naturalWidth+'x'+im.naturalHeight+' — '+src);draw();};
-  im.onerror=()=>{THCLog.add('error','Image '+key,'Failed to load '+src);console.warn('THC image could not load:',key,src);};
+  im.onload=()=>{if(imageRequests[key]!==request)return;state.images[key]=im;state.imageData[key]=src;THCLog.add('info','Image '+key,'Loaded '+im.naturalWidth+'x'+im.naturalHeight+' — '+src);draw();};
+  im.onerror=()=>{if(imageRequests[key]!==request)return;THCLog.add('error','Image '+key,'Failed to load '+src);console.warn('THC image could not load:',key,src);};
   im.src=src;
 }
 function fileToData(file,key){
@@ -180,6 +182,7 @@ async function loadProfile(id){
   const p=await dbGet(id); if(!p){THCLog.add('error','Profile','Not found: '+id);return;}
   THCLog.add('info','Profile','Loading '+p.name);
   state.profileId=p.id;
+  try{localStorage.setItem('thc-last-profile',p.id);}catch(e){}
   applyValues(p.values);
   // Migrate only the obsolete default coordinates; preserve user-customized locations.
   if(getVal('mapName')==='The Center' && String(getVal('server'))==='5592' && /^19\.7\s*,\s*36\.6$/.test(String(getVal('coords')).trim())){
@@ -196,9 +199,11 @@ async function loadProfile(id){
   state.images={bg:null,map:null,yellow:null,red:null,green:null,fridgeDedi:null,cryoDedi:null,warden:null};
   for(const key of Object.keys(state.images)) {
     const saved = p.images?.[key];
+    const astreosDefault=id===ASTREOS_ID && (key==='bg'||key==='map') && (!saved || saved===DEFAULTS[key]);
+    const preferred=astreosDefault?(key==='map'?ASTREOS_ASSETS.map:ASTREOS_ASSETS[(p.values?.astreosPhoto)==='storefront'?'storefront':'logo']):saved;
     const source = (key === 'fridgeDedi' || key === 'cryoDedi')
       ? (saved?.startsWith('data:image/') ? saved : DEFAULTS[key])
-      : (saved || DEFAULTS[key]);
+      : (preferred || DEFAULTS[key]);
     if(source) loadImage(source,key);
   }
   if(id===ASTREOS_ID){
@@ -214,6 +219,7 @@ function clearImageInputs(){
 }
 function resetFields(){
   state.profileId=null;
+  try{localStorage.removeItem('thc-last-profile');}catch(e){}
   state.imageData={};
   state.images={bg:null,map:null,yellow:null,red:null,green:null,fridgeDedi:null,cryoDedi:null,warden:null};
   clearImageInputs();
@@ -242,7 +248,7 @@ mapPicker.addEventListener('change',()=>{
  if(!mapPicker.value)return;
  setVal('mapName',mapPicker.value);
  // Never display a previous map's terrain as if it were the newly selected map.
- state.images.map=null;state.imageData.map=null;
+ imageRequests.map=(imageRequests.map||0)+1;state.images.map=null;state.imageData.map=null;
  THCLog.add('info','ASA map','Selected '+mapPicker.value+'; upload a matching map image if needed');
  draw();
 });
