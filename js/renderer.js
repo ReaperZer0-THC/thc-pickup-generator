@@ -150,5 +150,5 @@ $('download').onclick=async()=>{
 (async()=>{
  for(const key of Object.keys(DEFAULTS))loadImage(DEFAULTS[key],key);
  state.imageData={...DEFAULTS};updateOutputs();draw();
- try{await seedCenter();await seedAstreos();await refreshProfiles();}catch(e){THCLog.add('error','Profiles',String(e));}
+ try{await seedCenter();await seedAstreos();await refreshProfiles();let last=null;try{last=localStorage.getItem('thc-last-profile');}catch(e){}if(last&&await dbGet(last)){await loadProfile(last);$('profileSelect').value=last;syncMapPicker();}else{await loadProfile(ASTREOS_ID);$('profileSelect').value=ASTREOS_ID;syncMapPicker();}}catch(e){THCLog.add('error','Profiles',String(e));}
 })();
